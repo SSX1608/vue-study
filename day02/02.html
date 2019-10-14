@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发送ajax请求</title>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-resource.min.js"></script>
+	<style>
+		.current{
+			background-color: #ccc;
+		}
+	</style>
+	<script>
+		window.onload=function(){
+			new Vue({
+				el:'#itany',
+				data:{
+					initData:'',
+					keyword:'',
+					myData:[],
+					now:-1 //当前选中项的索引
+				},
+				methods:{
+					getData(e){
+						// 如果按方向键上和下就不发请求
+						if (e.keyCode == 38 || e.keyCode == 40)
+							return;
+						this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+							params:{
+								wd:this.keyword
+							},
+							jsonp:'cb'
+						}).then(res=>{
+							this.myData=res.data.s;
+							this.initData=this.keyword;//请求成功时把初始关键字存起来
+						},err=>{
+							console.log(err);
+						});
+					},
+					changeDown(){
+						this.now++;
+						this.keyword=this.myData[this.now];
+						if (this.now==this.myData.length) {
+							this.now=-1;
+							this.keyword=this.initData;
+						}
+					},
+					changeUp(){
+						this.now--;
+						this.keyword=this.myData[this.now];
+						if (this.now==-1) {
+							this.now=this.myData.length;
+							this.keyword=this.initData;
+						}
+					}
+				}
+			})
+		}
+	</script>
+</head>
+<body>
+	<div id="itany">
+		<input type="text" v-model="keyword" @keyup="getData($event)" @keydown.down.prevent="changeDown()" @keydown.up.prevent="changeUp()">
+		<ul>
+			<li v-for="(value,index) in myData" :class="{current:index==now}">
+				{{value}}
+			</li>
+		</ul>
+		<p v-show="keyword&&myData.length==0">暂无数据.......</p>
+	</div>
+</body>
+</html>

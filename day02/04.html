@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>计算属性</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="itany">
+		<!-- 基本用法 -->
+		<h2>{{msg}}</h2>
+		<h2>{{msg2}}</h2>
+
+		<!-- 处理数据 -->
+		<h2>{{msg.split(' ').reverse().join(' ')}}</h2> <!--  逻辑放到模板里，不清晰-->
+		<h2>{{reverseMsg}}</h2><!-- 逻辑放到计算属性里 -->
+		<button @click="change">修改msg值</button>
+
+		<!-- 计算属性 VS 方法 -->
+		<h2>{{num1}}</h2>
+		<h2>{{num2}}</h2>
+		<!-- 调用方法 -->
+		<!-- <h2>{{getNum2()}}</h2> -->
+
+		<button onclick="fn()">测试</button>
+
+		<!--计算输出由get和set函数组成，用来获取和设置计算属性 -->
+		<button @click="change2">修改计算属性</button>
+	</div>
+		<script>
+		let vm=new Vue({
+			el:'#itany',
+			data:{ //普通的属性
+				msg:'Welcome to Vue World',
+				num1:7
+			},
+			computed:{ //计算属性
+				msg2:function(){ //必须是个函数，函数必须有返回值,用来获取属性，称为getter函数
+					//访问计算属性时会自动调用此函数，获取计算属性即get
+					return '欢迎来到Vue的世界'
+				},
+				reverseMsg:function(){
+					// 可以包含逻辑处理操作，同时reverseMsg依赖于msg属性
+					return this.msg.split(' ').reverse().join(' ');
+				},
+				num2:{
+					get:function(){
+						console.log('num2'+new Date());
+						return this.num1-1;
+					},
+					set:function(value){
+						// 方法里面传过来的值在参数里面，而且不能直接更改num2的值，需要改其以来的值num1
+						this.num1=value;
+						console.log('修改')
+					}
+				}
+				
+			},
+			methods:{
+				change(){
+					this.msg='i love you Vue'
+				},
+				getNum2(){
+					console.log("方法调用"+new Date());
+					return this.num1-1;
+				},
+				change2(){
+					this.num1=111;
+				}
+			}
+		})
+		
+
+		function fn(){
+			setInterval(function(){
+				// 计算属性是可以直接通过vue实例访问到的
+				console.log('计算属性'+vm.num2)
+				console.log("-----------")
+				vm.getNum2()
+			},1000)
+		}
+		/*
+		注意：1、计算属性是基于他的依赖进行更新的，只有在相关依赖发生变化时才进行更新
+			  2、计算属性是缓存的，只要依赖没有改变，多次访问计算属性得到的值是之前缓存的计算结果，不会多次执行
+		 */
+	</script>
+</body>
+</html>

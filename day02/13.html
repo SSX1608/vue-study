@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>练习：多元素动画</title>
+	<script src="js/vue.js"></script>
+	<link rel="stylesheet" href="css/animate.css">
+	<style>
+		p{
+			width: 100px;
+			height: 100px;
+			background-color: red;
+			margin: 20px auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="itany">
+		<input type="text" v-model="name">
+		
+		<transition-group 
+			enter-active-class="animated bounceInUp"
+			leave-active-class="animated bounceOutDown"
+		>
+			<p v-for="(v,k) in arr2" :key="k" v-show="flag">
+				{{v}}
+			</p>
+		</transition-group>
+	</div>
+
+	<script>
+		let vm=new Vue({
+			el:'#itany',
+			data:{				
+				flag:true,
+				arr:['tom','mike','jack','alice','alex','mark'],
+				name:''
+			},
+			computed:{
+				arr2:function(){
+					var temp=[];
+					this.arr.forEach(val=>{
+						// stringObj.includes(substring [, position])如果传入的字符串包含在字符串对象中，则 includes 方法返回 true；否则返回 false。
+						if (val.includes(this.name)) {
+							temp.push(val);
+						}
+					});
+					return temp;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义指令</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="itany">
+		<!-- <h3 v-hello>{{msg}}</h3> -->
+		<button @click="change">更新数据</button>
+
+		<h2 v-world:wbs214.hello.hehe="username">{{msg}}</h2>
+
+		<!-- <h3 v-wbs>简化指令注册</h3> -->
+
+		<input type="text" v-model="msg" v-focus>
+	</div>
+
+	<script>
+		/*
+		自定义全局指令Vue.directive(指令ID，[options钩子函数])
+		注：使用指令时必须在指令名称前加前缀v-，即v-指令名
+		作用：就是扩展HTML元素的样式和功能已经逻辑判断
+		 */
+		/*
+		指令中钩子函数的参数：
+		el：指令所绑定的元素，可以用来操作DOM
+		binding: 一个对象，包括一些属性
+		 */
+		// 注册指令方式1：传入一个对象
+		Vue.directive('world',{
+			bind(el,binding){
+				console.log(el); //指令所绑定的元素，DOM对象
+				el.style.color='red';
+
+				console.log(binding);
+				//name获取指令的名字
+				//value获取指令的值
+				//expression绑定值的字符串形式
+				//arg获取给指令传的参数
+				//modifiers获取修饰符的对象
+			}
+		})
+
+		// 注册指令方式2：传入一个简单的函数，bind或update是执行
+		Vue.directive('wbs',function(){
+			alert('jjjjj')
+		})
+		// 注册指令
+		Vue.directive('hello',{
+			bind(){ //常用 ！！
+				alert('指令第一次绑定到元素上时调用，值调用一次，可执行初始化操作');
+			},
+			inserted(){
+				alert('被绑定元素插入到DOM中时调用');
+			},
+			update(){
+				alert('当被绑定的元素所在模板更新时调用');
+			},
+			componentUpdated(){
+				alert('被绑定元素所在模板完成一次更新周期时调用,即已经更新了');
+			},
+			unbind(){
+				alert('指令与元素解绑时调用');
+			}
+		})
+		let vm=new Vue({
+			el:'#itany',
+			data:{				
+				msg:'welcome to Vue',
+				username:'alice'
+			},
+			methods:{
+				change(){
+					this.msg='欢迎来到Vue的世界'
+				}
+			},
+			// 定义局部指令,在Vue实例中的选项里面
+			directives:{
+				focus:{
+					inserted(el){
+						el.focus(); //插入元素时获取焦点
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

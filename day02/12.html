@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>多元素动画</title>
+	<script src="js/vue.js"></script>
+	<link rel="stylesheet" href="css/animate.css">
+	<style>
+		p{
+			width: 100px;
+			height: 100px;
+			background-color: red;
+			margin: 20px auto;
+		}
+	</style>
+</head>
+<body>
+	<div id="itany">
+		<button @click="flag=!flag">点我</button>
+		
+		<!-- 
+			<transition>只能用于单一个元素，而多个并列的元素动画必须包裹在 <transition-group>里面，而且<transition-group>的子元素必须指定唯一的key值
+		-->
+		<transition-group 
+			enter-active-class="animated bounceInLeft"
+			leave-active-class="animated bounceOutRight"
+		>
+			<p v-show="flag" :key="1">VueJs</p>
+			<p v-show="flag" :key="2">Hello World</p>
+		</transition-group>
+	</div>
+
+	<script>
+		let vm=new Vue({
+			el:'#itany',
+			data:{				
+				flag:false
+			}
+		})
+	</script>
+</body>
+</html>

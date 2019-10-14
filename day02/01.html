@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>发送ajax请求</title>
+	<script src="js/vue.js"></script>
+	<script src="js/axios.min.js"></script>
+	<script src="js/vue-resource.min.js"></script>
+	<script>
+		window.onload=function(){
+			new Vue({
+				el:'#itany',
+				data:{
+					user:{
+						// name:'alice',
+						// age:19
+					},
+					uid:''
+				},
+				methods:{
+					// 使用axios发送ajax，返回的是promise对象
+					send(){
+						axios({
+							method:'get',
+							url:'user.json'
+						}).then(res => {
+							console.log(res.data);
+						}).catch(err => {
+							console.log(err)
+						})
+					},
+					// get方式发送ajax请求，
+					sendGet(){
+
+						// 方式1：通过url传参
+						// axios.get('server.php?name=tom&age=20')
+						
+						// 方式2：通过params选项传参
+						axios.get('server.php',{
+							params:{
+								name:"tom",
+								age:20
+							}
+						})
+						.then( res => {
+							console.log(res);
+						}).catch( err => {
+							console.log(err)
+						})
+					},
+					// post方式发送ajax请求，
+					// 注：axois发送post数据是默认的数据格式是Request Payload，并非我们常用的Form Data格式，所以参数必须要以键值对形式传递(数据拼接)，不能以json的形式传参
+					sendPost(){
+						// 这种方式是传不过去的
+						// axios.post('server.php',{
+						// 	name:'alice',
+						// 	age:18
+						// })
+						// 传参方式：1、自己拼接键值对
+						// axios.post('server.php','name=alice$age=18')
+						// 传参方式：2、使用transformRequest转换数据
+						axios.post('server.php',this.user,{
+							transformRequest:[
+								function (data) {
+									let params='';
+									for(let index in data){
+										params+=index+'='+data[index]+'&'
+									}
+									return params;
+								}
+							]
+						})
+						.then( res => {
+							console.log(res);
+						}).catch( err => {
+							console.log(err)
+						})
+					},
+					// axios并不支持跨越请求，github后台允许跨域，只能使用第三方库或者用vue-resource
+					getUserById(uid){
+						axios.get('https://api.github.com/users/'+uid).then(res=>{
+							console.log(res.data);
+							this.user=res.data;
+						});
+					},
+
+					// 使用vue-resource进行jsonp跨越请求
+					sendJSONP(){
+						// A Vue instance provides the this.$http service which can send HTTP requests(在引入vue-resource之后，会给vue实例加上一个$http service，其实就是vue-resource实例)
+						// https://sug.so.360.cn/suggest?callback=suggest_so&encodein=utf-8&encodeout=utf-8&format=json&fields=word&word=a
+						this.$http.jsonp('https://sug.so.360.cn/suggest',{
+							params:{
+								word:'a'
+							}
+						}).then(res=>{
+							console.log(res.data.s)
+						},err=>{
+							console.log(err);
+						});
+					},
+					sendJSONP2(){
+						// https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=&json=1&p=3&sid=1430_21116_18560_24880_22073&req=2&bs=a&pbs=a&sc=eb&csor=0&pwd=a&cb=jQuery1102048438041066451154_1510106121267&_=1510106121272
+						this.$http.jsonp('https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su',{
+							params:{
+								wd:'a'//百度的参数是wd
+							},
+							jsonp:'cb'//百度使用的jsop名称是cb，所以参数要改成cb
+						}).then(res=>{
+							console.log(res.data.s)
+						},err=>{
+							console.log(err);
+						});
+					}
+				}
+			})
+		}
+	</script>
+</head>
+<body>
+	<div id="itany">
+		<button @click="send">发送AJAX请求</button>
+		<button @click="sendGet">GET方式发送ajax请求</button>
+		<button @click="sendPost">POST方式发送ajax请求</button>
+		<br><br>
+		GitHub ID: <input type="text" v-model="uid">
+		<button @click="getUserById(uid)">获取GitHub账号信息并显示</button>
+		<br>
+		姓名：{{user.name}} <br>
+		头像：<img src="user.avatar_url" alt="">
+
+		<br>
+		<button @click="sendJSONP">向360发送JSONP请求</button>
+		<button @click="sendJSONP2">向百度发送JSONP请求</button>
+	</div>
+</body>
+</html>

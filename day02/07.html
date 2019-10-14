@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>监视数据的变化：$watch</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<div id="itany">
+		<input type="text" v-model="name">
+		<h2>{{name}}</h2>
+		<hr>
+
+		<input type="text" v-model="age">
+		<h2>{{age}}</h2>
+		<hr>
+		
+		<input type="text" v-model="user.name">
+		<h2>{{user.name}}</h2>
+	</div>
+
+	<script>
+		let vm=new Vue({
+			el:'#itany',
+			data:{				
+				name:'tom',
+				age:23,
+				user:{
+					id:1001,
+					name:'alice'
+				}
+
+			},
+			watch:{ //方式2：使用Vue实例提供的watch选项
+				age:(newValue,oldValue) => {
+					console.log('age'+oldValue+'新值：'+newValue)
+				},
+				user:{
+					handler:(newValue,oldValue) => {
+						console.log('user'+oldValue.name+'新值：'+newValue.name)
+					},
+					deep:true //深度监视，当对象中的属性发生变化时也会监视，触发回调，但是旧值是看不到的，新值和旧值都是指向被改过的内存空间
+				}
+			}
+		});
+
+		// vm.$watch --> 对某个vue实例的数据变化进行监视
+		// 使用方式1：
+		vm.$watch('name',function(newValue,oldValue){
+			console.log('name被改了，原值：'+oldValue+'新值：'+newValue)
+		});
+		// 深度监视对象变化
+		vm.$watch('user',function(newValue,oldValue){
+			console.log('name被改了，原值：'+oldValue+'新值：'+newValue)
+		},true);
+	</script>
+</body>
+</html>
