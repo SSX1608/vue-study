@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>非父子组件间的通信</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 非父子组件之间的通信，可以通过一个空的vue实例作为中央时间总线(事件中心)，用它来触发事件和监听事件,即把事件挂到同一个全局vue实例上
+	Bus.$emit(事件名，数据)
+	Bus.$on(事件名，data=>{})
+	-->
+	<div id="itany">
+		<my-a></my-a>
+		<my-b></my-b>
+		<my-c></my-c>
+	</div>
+
+	<template id="a">
+		<div>
+			<h3>A组件：{{name}}</h3>
+			<button @click="send">将数据发送给C组件</button>
+		</div>
+	</template>
+		
+	<template id="b">
+		<div>
+			<h3>B组件：{{age}}</h3>
+			<button @click="send">将数据发送给C组件</button>
+		</div>
+	</template>
+
+	<template id="c">
+		<div>
+			<h3>c组件：{{name}}, {{age}}</h3>
+		</div>
+	</template>
+
+	<script>
+		// 注：事件需要先监听后发送才能收到发送的数据
+		// 定义一个空的Vue实例
+		var Bus=new Vue();
+		// 件组件定义一个独立的对象
+		var A={
+			template:'#a',
+			data(){
+				return {
+					name:'tom'
+				}
+			},
+			methods:{
+				send(){
+					Bus.$emit('data-a',this.name);
+				}
+			}
+		};
+		var B={
+			template:'#b',
+			data(){
+				return {
+					age:20
+				}
+			},
+			methods:{
+				send(){
+					Bus.$emit('data-b',this.age);
+				}
+			}
+		};
+		var C={
+			template:'#c',
+			data(){
+				return {
+					name:'',
+					age:0
+				}
+			},
+			mounted(){ //在模板编译完成后执行
+				Bus.$on('data-a',name=>{ //此处的回调函数如果用普通函数则this指代空实例bus，如果使用箭头函数则指代组件C
+					this.name=name;
+					console.log(this)
+				});
+
+				Bus.$on('data-b',age=>{
+					this.age=age;
+				})
+			}
+		}
+
+		var vm=new Vue({
+			el:'#itany',
+			components:{
+				'my-a':A,
+				'my-b':B,
+				'my-c':C
+			}
+		})
+	</script>
+</body>
+</html>

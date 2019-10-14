@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件引用模板</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 当组件中的标签比较多的时候，把它放到一个<template>的标签中，再用template通过标签的id引用模板 -->
+	<div id="itany">
+		<my-hello></my-hello>
+	</div>
+	
+	<!-- <template>内部必须有且只有一个根元素，并且起一个id用于引用 -->
+	<template id="wbs">
+		<div>
+			<h3>{{msg}}</h3>
+			<ul>
+				<li v-for="value in arr">{{value}}</li>
+			</ul>
+		</div>
+	</template>
+	<script>
+		var vm=new Vue({ 
+			el:'#itany',
+			components:{ 
+				'my-hello':{ //'my-hello'是组件的id，下面配置项还可以配置name名称，若不设置默认是id作为标签名
+					name:'wbs12345',
+					template:'#wbs',
+					data:function(){
+						return {
+							msg:'欢迎来到Vue的世界',
+							arr:['tom','jack','mike']
+						}
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

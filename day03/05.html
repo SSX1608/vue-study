@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>父子组件及组件之间数据的传递</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- 数据传输：props down, events up -->
+	<!-- 注：组件中的数据共有三种形式：data、props、computed -->
+	<div id="itany">
+		<my-hello></my-hello>
+	</div>
+
+	<template id="hello">
+		<div>
+			<h3>我是hello父组件</h3>
+			<h3>访问自己的数据：{{msg}},{{name}},{{age}},{{user.username}}</h3>
+			<h3>访问子组件中的数据：{{sex}},{{height}}</h3>
+			<hr>
+
+			<!-- 父传给子步骤1、子组件只能在父组件中使用， 并给子组件绑定message属性且把自己的数据传给此属性值-->
+
+			<!-- 子传父步骤2、父组件在使用子组件的地方监听子组件发送的事件,监听到之后并触发一个在父组件中定义的方法用来获取数据 -->
+			<my-world :message="msg" :name="name" :age="age" @e-world="getData"></my-world>
+		</div>
+	</template>
+
+	<template id="world">
+		<div>
+			<h4>我是world子组件</h4>
+			<!-- 默认情况下，子父组件无法相互访问数据，每个组件实例的作用域都是独立的 -->
+			<!--  -->
+			<h4>访问父组件中的数据：{{message}},{{name}},{{age}},{{user.username}}</h4>
+			<h4>访问自己的数据：{{sex}},{{height}}</h4>
+			<button @click="send">将子组件的数据向上发送给父组件</button>
+		</div>
+	</template>
+
+	<script>
+		var vm=new Vue({ //根组件
+			el:'#itany',
+			components:{ 
+				'my-hello':{ //父组件
+					methods:{
+						// 此方法接收数据并存储到data里
+						getData(sex,height){
+							this.sex=sex;
+							this.height=height;
+						}
+					},
+					template:'#hello',
+					data(){
+						return {
+							msg:'VueJs',
+							name:'tom',
+							age:23,
+							user:{id:3952,username:'唐伯虎'},
+							sex:'',
+							height:''
+						}
+					},
+					components:{
+						'my-world':{ //子组件(在一个组件内部定义另一个组件，称为父子组件)
+							template:'#world',
+							//props:['message','name','age','user']  //父传给子步骤2、在子组件内部使用props选项(字符串数组)来声明获取的数据，即接收来自父组件的数据
+							data(){
+								return {
+									sex:'male',
+									height:180
+								}
+							},
+							props:{ //也可以是对象，允许配饰高级设置，如类型判断，数据校验，设置默认值
+								message:String,
+								name:{
+									type:String,
+									required:true
+								},
+								age:{
+									type:Number,
+									default:18,
+									validator:function(value) {
+										return value>=0;
+									}	
+								},
+								user:{
+									type:Object,
+									default:function(){ //对象或数组的默认值必须使用一个工厂函数进行返回数据
+										return {id:3306,username:'秋香'};
+									}
+								}
+							},
+							methods:{
+								send(){
+									// console.log(this); //此处的this表示是当前的子组件实例
+									this.$emit('e-world',this.sex,this.height);
+									//子传父步骤1：在子组件中发送一个自定义的事件，并发送数据
+									//此方法也可以在子组件的钩子函数中触发
+								}
+							}
+						}
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

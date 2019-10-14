@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>组件slot内容分发</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!-- slot本意：位置、槽 -->
+	<div id="itany">
+		<my-hello>
+			<ul slot="s1">
+				<li>aaa</li>
+				<li>bbb</li>
+				<li>ccc</li>
+			</ul>
+			
+			<ol slot="s2">
+				<li>111</li>
+				<li>222</li>
+				<li>333</li>
+			</ol>
+		</my-hello>
+	</div>
+	
+	<template id="hello">
+		<div>
+			<slot name="s2"></slot>
+			<h3>welcome to Vue world</h3>
+			<slot name="s1"></slot>
+
+			<!-- <slot>如果没有原内容，则显示该内容</slot>--> <!-- 单一slot --> 
+		</div>
+	</template>
+
+	<script>
+
+		var vm=new Vue({
+			el:'#itany',
+			components:{
+				'my-hello':{
+					template:'#hello'
+				}
+			}
+		})
+	</script>
+</body>
+</html>

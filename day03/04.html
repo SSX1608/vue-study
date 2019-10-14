@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>动态组件</title>
+	<script src="js/vue.js"></script>
+</head>
+<body>
+	<!--<component :is=""> 多个组件使用同一个挂载点，然后通过:is属性动态的在组件间进行切换 -->
+	<div id="itany">
+		<button @click="flag='my-hello'">显示hello组件</button>
+		<button @click="flag='my-world'">显示world组件</button>
+	<!-- keep-alive可以把切换出去的组件保留在内存中，可以保留他的状态或避免重新渲染,将挂载点放到<keep-alive>内部 -->
+		<div>
+			<keep-alive>
+				<component :is="flag"></component>
+			</keep-alive>
+		</div>
+	</div>
+
+	<script>
+		var vm=new Vue({ 
+			el:'#itany',
+			data:{
+				flag:'my-hello'
+			},
+			components:{ 
+				'my-hello':{
+					template:'<h3>我是hello组件：{{x}}</h3>',
+					data(){
+						return {
+							x:Math.random()
+						}
+					}
+				},
+				'my-world':{
+					template:'<h3>我是world组件：{{y}}</h3>',
+					data(){
+						return {
+							y:Math.random()
+						}
+					}
+				}
+			}
+		})
+	</script>
+</body>
+</html>

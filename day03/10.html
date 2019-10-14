@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>路由嵌套和参数的传递</title>
+	<script src="js/vue.js"></script>
+	<script src="js/vue-router.js"></script>
+	<link rel="stylesheet" href="css/animate.css">
+	<style>
+		.active{
+			font-size: 20px;
+			color: #ff7300;
+			text-decoration: none;
+		}
+	</style>
+</head>
+<body>
+	<!-- 路由传参的两种方式：
+		a.查询字符串：login?name=tom&pwd=1826,在跳转的组件里用$route.query接收参数
+		b.rest风格的url：regist/alice/456,在跳转的组件里用$route.params接收参数
+	 -->
+	<div id="itany">
+		<div>
+			<router-link to="/home">主页</router-link>
+			<router-link to="/user">用户</router-link>
+		</div>
+		<div>
+			<!-- 给路由加上动画 -->
+			<transition enter-active-class="animated bounceOut">
+				<router-view></router-view>	
+			</transition>
+		</div>
+		<hr>
+		
+		<!-- 路由的方法：router.push({})和router.replace({}) -->
+		<button @click="push">添加路由</button>
+		<button @click="replace">替换路由</button>
+
+	</div>
+
+	<template id="user">
+		<div>
+			<h3>用户信息</h3>
+			<ul>
+				<!-- 此处的to路径必须加上"/" -->
+				<!-- <li><router-link to="/user/login">用户登录</router-link></li>
+				<li><router-link to="/user/regist">用户注册</router-link></li> -->
+				<!-- 一下也可以用tag来指定渲染的标签，默认渲染成a链接 -->
+				<router-link to="/user/login?name=tom&pwd=123" tag="li">用户登录</router-link>
+				<router-link to="/user/regist/alice/456" tag="li">用户注册</router-link>
+			</ul>
+
+			<transition enter-active-class="animated bounceOut">
+				<router-view></router-view>	
+			</transition>
+		</div>
+	</template>
+
+	<script>
+		var Home={
+			template:'<h3>我是主页</h3>'
+		}
+		var User={
+			template:'#user'
+		}
+		var Login={
+			template:'<h4>用户登录......获取参数：{{$route.query}}, {{$route.path}}</h4>'
+		}
+		var Regist={
+			template:'<h4>用户注册......获取参数：{{$route.params}}, {{$route.path}}</h4>'
+		}
+		const routes=[
+			{
+				path:'/home',
+				component:Home
+			},
+			{
+				path:'/user',
+				component:User,
+				children:[
+					{
+						path:'login', //嵌套的路由不能加"/",加"/"是表示从根路径开始
+						component:Login
+					},
+					{
+						path:'regist/:username/:password',//rest风格需在此处指定参数的名称
+						component:Regist
+					}
+				]
+			},
+			{
+				path:'*',
+				redirect:'/home'
+			} 
+		]
+		const router=new VueRouter({
+			routes, 
+			linkActiveClass:'active'
+		})
+
+		var vm=new Vue({
+			el:'#itany',
+			router, //注入路由
+			methods:{
+				push(){
+					router.push({
+						path:'/home' //切换路由
+					});
+				},
+				replace(){
+					router.replace({
+						path:'/user' //替换路由,没有历史记录
+					});
+				}
+			}
+		})
+	</script>
+</body>
+</html>
