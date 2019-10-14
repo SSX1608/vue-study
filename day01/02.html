@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>常用指令：v-model</title>
+	<script src="js/vue.js"></script>
+	<script>
+		window.onload=function(){
+			new Vue({
+				// el:'#itany',用id选择器
+				// el:'.itany',用类选择器
+				// 但是el不允许挂载在<body>或者<html>元素上
+				el:'div',//使用元素选择器
+				data:{
+					name:'tom',//即使没有值也必须声明出来
+					age:21,
+					flag:true,
+					nums:[12,4,3,6],
+					user:{id:9623,name:'唐伯虎'}
+				}
+			})
+		}
+	</script>
+</head>
+<body>
+	<!-- <div id="itany"> -->
+	<!-- <div class="itany"> -->
+	<div>
+		用户名：<input type="text" v-model="name">
+		<hr>
+		{{name}} <br>
+		{{age}} <br>
+		{{flag}} <br>
+		{{nums}} <br>
+		{{user}} <br>
+	</div>
+	
+</body>
+</html>

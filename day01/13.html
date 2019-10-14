@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>自定义过滤器</title>
+	<script src="js/vue.js"></script>
+	<script>
+	/*自定义全局过滤器*/
+	Vue.filter('addZero',function(data) {
+		// console.log(data);
+		return data<10?'0'+data:data;
+	});
+
+	// 第一个参数是要处理的数据对象，其余的是过滤器传进来的参数
+	// Vue.filter('number',(data,num) => {
+	// 	return data.toFixed(num);//number类型的四舍五入toFixed
+	// });
+
+	Vue.filter('date',data => {
+		let d=new Date(data);
+		// 处理日期格式的数据
+		return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+	});
+	window.onload=function(){
+		let vm=new Vue({
+			el:'#itany',
+			data:{
+				currentTime:Date.now()
+			},
+			// 定义局部过滤器
+			filters:{
+				number:(data,n) => {
+					return data.toFixed(n);
+				}
+			}
+		})
+	}
+	</script>
+</head>
+<body>
+	<div id="itany">
+		<!-- 一个数字补0 -->
+		<h3>{{2 | addZero}}</h3>
+		
+		<!-- 保留小数位 -->
+		<h3>{{12.36541 | number(3)}}</h3>
+
+		<h3>{{currentTime | date}}</h3>
+	</div>
+</body>
+</html>

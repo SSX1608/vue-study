@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>常用指令：v-show/v-if</title>
+	<script src="js/vue.js"></script>
+	<script>
+	window.onload=function(){
+		let vm=new Vue({
+			el:'#itany',
+			data:{
+				flag:true
+			},
+			methods:{
+				change(){
+					this.flag=!this.flag;
+				}
+			}
+		})
+	}
+	</script>
+</head>
+<body>
+	<!-- v-show是通过添加display的属性来切换的，而v-if是通过移除和添加元素来实现切换的 -->
+	<div id="itany">
+		<button v-on:click="flag=!flag">隐藏</button>
+		<!-- <button v-on:click="change">隐藏</button> -->
+		<hr>
+		<!-- 指令都可以直接访问到vue中的数据 -->
+		<div style="width: 100px;height: 100px;background-color: red;" v-show="flag">Hello VueJs</div>
+	</div>
+</body>
+</html>

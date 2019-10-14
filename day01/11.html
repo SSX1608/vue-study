@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>class和style属性</title>
+	<script src="js/vue.js"></script>
+	<script>
+	window.onload=function(){
+		let vm=new Vue({
+			el:'#itany',
+			data:{
+				bb:'aa',
+				dd:'cc',
+				flag:true,
+				num:2,
+				hello:{aa:true,cc:true},
+				xx:{color:'blue',fontSize:"30px"},
+				yy:{backgroundColor:'#ff7300'}
+			}
+		})
+	}
+	</script>
+	<style>
+		.aa{
+			color: red;
+			font-size: 20px;
+		}
+		.cc{
+			background-color: #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id="itany">
+	<!-- class的属性绑定 -->
+		<!-- <p class="aa">Hello、World</p> --><!-- 可以访问，普通的css -->
+		<!-- <p :class="aa">Hello、World</p> --><!-- vue的属性绑定时不能直接访问css样式 ，会认为是个data里面的变量-->
+		
+		<!-- 方式1 变量形式 -->
+		<!-- <p :class="bb">Hello、World</p> -->
+
+		<!-- 方式2 数组形式  同时引用多个-->
+		<!-- <p :class="[bb,dd]">Hello、World</p> -->
+
+		 <!-- 方式3 json形式  常用！！！ -->
+		<!-- <p :class="{aa:false,cc:flag}">Hello、World</p> -->
+		<!-- <p :class="{aa:num>0}">Hello、World</p> -->
+
+		<!-- 方式4  变量引用json形式 -->
+		<!-- <p :class="hello">Hello、World</p> -->
+
+		<!-- style属性的绑定 -->
+		<p :style="[xx,yy]">Hello</p>
+	</div>
+</body>
+</html>

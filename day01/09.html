@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>键盘事件</title>
+	<script src="js/vue.js"></script>
+	<script>
+	window.onload=function(){
+		// 自定义键位别名
+		Vue.config.keyCodes = {
+		  v: 86,
+		  a: 65,
+		  f1:112,//按alt+F1
+		  // camelCase 不可用
+		  // mediaPlayPause: 179,
+		  // 取而代之的是 kebab-case 且用双引号括起来
+		  "media-play-pause": 179,
+		  up: [38, 87]
+		}
+		let vm=new Vue({
+			el:'#itany',
+			data:{
+				
+			},
+			methods:{
+				show(e){
+					// console.log(e.keyCode)
+					if (e.keyCode == 13) {
+						console.log('按了回车')
+					}
+				},
+				print(){
+					console.log('按了回车')
+				}
+			}
+		})
+	}
+	</script>
+</head>
+<body>
+	<div id="itany">
+		<!-- 键盘事件 @keydown @keypress @keyup -->
+		<!-- 用户名：<input type="text" @keydown="show($event)"> -->
+
+		<!-- 简化按键的判断 -->
+		<!-- 用户名：<input type="text" @keydown.13="print"> -->
+		<!-- 用户名：<input type="text" @keydown.enter="print"> -->
+		<!-- 用户名：<input type="text" @keydown.up="print"> -->
+		<!-- 用户名：<input type="text" @keydown.down="print"> -->
+		<!-- 用户名：<input type="text" @keydown.shift="print"> -->
+		<!-- 用户名：<input type="text" @keydown.delete="print"> -->
+		<!-- 用户名：<input type="text" @keydown.backspace="print"> -->
+		用户名：<input type="text" @keydown.112="print">
+
+		<!-- 事件修饰符 -->
+		<button @click.once="print">只触发一次</button>
+	</div>
+</body>
+</html>

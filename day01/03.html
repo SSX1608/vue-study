@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>常用指令：v-for</title>
+	<script src="js/vue.js"></script>
+	<script>
+		window.onload=function(){
+			new Vue({
+				el:'#itany',
+				data:{
+					arr:[12,3,5,6,95],
+					user:{id:1542,name:'陶波湖',age:20},
+					arr2:[12,36,6,8,12,36],
+					users:[
+						{id:1542,name:'陶波湖',age:20},
+						{id:1002,name:'黄燕飞',age:26},
+						{id:1006,name:'陶千',age:30},
+					]
+				}
+			})
+		}
+	</script>
+</head>
+<body>
+	<div id="itany">
+		<!-- {{arr}} -->
+		<!-- 普通循环 -->
+		<ul>
+			<!-- <li v-for="value in arr">{{value}}</li> -->
+			<!-- <li v-for="value in user">{{value}}</li> -->
+			<!-- (value,index)参数一是值，参数二是名 -->
+			<!-- <li v-for="(value,index) in user">{{index}}={{value}}</li> -->
+			<!-- 可以循环包含重复元素的集合 可以通过指定:key属性来为当前的元素绑定唯一的key，当更新元素时可以重用元素，提高效率，类似于vue1.0中的track by-->
+			<!-- <li v-for="(v,k) in arr2" :key="k">{{v}}</li> -->
+			<li v-for="(user,index) in users">
+				{{index}}.{{user.id}},{{user.name}},{{user.age}}
+			</li>
+		</ul>
+	</div>
+</body>
+</html>
